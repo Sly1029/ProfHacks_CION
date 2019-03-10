@@ -53,7 +53,3 @@ if circles is not None:
     # show the output image
     cv2.imshow("output", np.hstack([output]))
     cv2.waitKey(0)
-
-
-
-
