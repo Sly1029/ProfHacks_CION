@@ -18,8 +18,6 @@ pix = m.load()
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray,(5,5),0);
 gray = cv2.medianBlur(gray,5)
-
-
 # Adaptive Guassian Threshold is to detect sharp edges in the Image. For more information Google it.
 gray = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,3.5)
 param2_num = 11
