@@ -2,7 +2,8 @@ import numpy as np
 import argparse
 import cv2
 from PIL import Image
-
+import math
+import True_MultiLateration
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 #ap.add_argument("-i", "--image", required=True, help="Path to the image")
@@ -39,6 +40,9 @@ while circles.shape[1] != 3:
     param2_num+=1
 # ensure at least some circles were found
 avg = 0
+red = ()
+yellow = ()
+blue = ()
 if circles is not None:
     # convert the (x, y) coordinates and radius of the circles to integers
     circles = np.round(circles[0, :]).astype("int")
@@ -47,16 +51,32 @@ if circles is not None:
     # loop over the (x, y) coordinates and radius of the circles
     x1 = 0
     y1 = 0
+
     for (x, y, r) in circles:
         # draw the circle in the output image, then draw a rectangle
         # corresponding to the center of the circle
         x1 = np.uint64(x).item()
         y2 = np.uint64(y).item()
+        print(pix[x1,y2])
         print(x1,y2)
-        print(pix[x1, y2])
+        l = pix[x1,y2]
+        if l[0]>=160 and l[1]<=60 and l[2]<=70 :
+            #Pink
+            print('Red')
+            red = (x, y, r)
+        elif  l[0] <= 85 and l[1] <= 116 and l[2] >= 90:
+            # BLUE
+            print('Blue')
+            blue = (x, y, r)
+        elif l[0]>=150 and l[0] <= 213 and l[1]>=110 and l[2]<=41:
+            #Yellow
+            print('Yellow')
+            yellow = (x, y, r)
         cv2.circle(output, (x, y), r, (0, 255, 0), 4)
         cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
-
+    temp_tup = (red[2], blue[2], yellow[2])
+    True_MultiLateration.optic_ratio(temp_tup, 13)
+    print (True_MultiLateration.true_multilateration(math.sqrt((red[0]+blue[0])**2 + (red[1]+blue[1])**2),yellow[0]-red[0], math.sqrt((red[0]+yellow[0])**2 + (red[1]+yellow[1])**2) ))
     # show the output image
-    cv2.imshow("output", image)
+    cv2.imshow("output", output)
     cv2.waitKey(0)
