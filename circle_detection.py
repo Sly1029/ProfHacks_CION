@@ -9,7 +9,7 @@ ap = argparse.ArgumentParser()
 #ap.add_argument("-i", "--image", required=True, help="Path to the image")
 #args = vars(ap.parse_args())
 # load the image, clone it for output, and then convert it to grayscale
-filename = "images/color_correct.jpg"
+filename = "images/color_correct_phone.jpg"
 image = cv2.imread(filename)
 image_data = np.asanyarray(image)
 output = image.copy()
@@ -39,7 +39,7 @@ while circles.shape[1] != 3:
                                )
     param2_num+=1
 # ensure at least some circles were found
-avg = 0
+avg = [0,0,0]
 red = ()
 yellow = ()
 blue = ()
@@ -57,18 +57,27 @@ if circles is not None:
         # corresponding to the center of the circle
         x1 = np.uint64(x).item()
         y2 = np.uint64(y).item()
+        r2 = int(np.uint64(r).item())
         print(pix[x1,y2])
-        print(x1,y2)
-        l = pix[x1,y2]
-        if l[0]>=160 and l[1]<=60 and l[2]<=70 :
+        #print(x1,y2)
+        avg=[0,0,0]
+        for a in range (0,  int(r2/2)):
+            avg[0] += pix[x1+a,y2][0]
+            avg[1] += pix[x1 + a, y2][1]
+            avg[2] += pix[x1 + a, y2][2]
+        avg[0] /= (r2/2)
+        avg[1] /= (r2/2)
+        avg[2] /= (r2 / 2)
+        print(avg)
+        if avg[0]>=120 and avg[1]<=70 and avg[2] < 90 :
             #Pink
             print('Red')
             red = (x, y, r)
-        elif  l[0] <= 85 and l[1] <= 116 and l[2] >= 90:
+        elif  avg[0] <= 85 and avg[1] <= 116 and avg[2] >= 80:
             # BLUE
             print('Blue')
             blue = (x, y, r)
-        elif l[0]>=150 and l[0] <= 213 and l[1]>=110 and l[2]<=41:
+        elif avg[0]>=150 and avg[0] <= 213 and avg[1]>=110 and avg[2]<=70:
             #Yellow
             print('Yellow')
             yellow = (x, y, r)
@@ -76,7 +85,7 @@ if circles is not None:
         cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
     temp_tup = (red[2], blue[2], yellow[2])
     True_MultiLateration.optic_ratio(temp_tup, 13)
-    print (True_MultiLateration.true_multilateration(math.sqrt((red[0]+blue[0])**2 + (red[1]+blue[1])**2),yellow[0]-red[0], math.sqrt((red[0]+yellow[0])**2 + (red[1]+yellow[1])**2) ))
+    print (True_MultiLateration.true_multilateration(math.sqrt((red[0]-blue[0])**2 + (red[1]-blue[1])**2),yellow[0]-red[0], math.sqrt((red[0]-yellow[0])**2 + (red[1]-yellow[1])**2) ))
     # show the output image
     cv2.imshow("output", output)
     cv2.waitKey(0)
