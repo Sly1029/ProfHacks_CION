@@ -1,0 +1,29 @@
+img {
+    max-width: 40%;
+    max-height: 40%;
+}
+.square {
+    height: auto;
+    width: auto;
+}
+
+.navbar{
+	margin-bottom: 0;
+	border-radius: 0;
+	background-color: #00000;
+	color: #fff;
+	font-size: 1.2em;
+	border: 0;
+}
+
+.navbar-brand{
+	float: left;
+	min-height: 55px;
+	padding: 0 15px 5px;
+}
+
+
+
+
+
+
