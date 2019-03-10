@@ -9,7 +9,7 @@ ap = argparse.ArgumentParser()
 #ap.add_argument("-i", "--image", required=True, help="Path to the image")
 #args = vars(ap.parse_args())
 # load the image, clone it for output, and then convert it to grayscale
-filename = "images/color_correct_phone.jpg"
+filename = "images/measured_img.jpg"
 image = cv2.imread(filename)
 image_data = np.asanyarray(image)
 output = image.copy()
@@ -77,15 +77,16 @@ if circles is not None:
             # BLUE
             print('Blue')
             blue = (x, y, r)
-        elif avg[0]>=150 and avg[0] <= 213 and avg[1]>=110 and avg[2]<=70:
+        elif avg[0]>=130 and avg[0] <= 213 and avg[2]<=70:
             #Yellow
             print('Yellow')
             yellow = (x, y, r)
         cv2.circle(output, (x, y), r, (0, 255, 0), 4)
         cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
     temp_tup = (red[2], blue[2], yellow[2])
-    True_MultiLateration.optic_ratio(temp_tup, 13)
-    print (True_MultiLateration.true_multilateration(math.sqrt((red[0]-blue[0])**2 + (red[1]-blue[1])**2),yellow[0]-red[0], math.sqrt((red[0]-yellow[0])**2 + (red[1]-yellow[1])**2) ))
+    True_MultiLateration.optic_ratio(temp_tup, 0.00164384)
+    temp = True_MultiLateration.true_multilateration(0.15 ,0, 0.15)
+    print (f'{temp[0]*100} {temp[1]*100} {temp[2]*100}')
     # show the output image
     cv2.imshow("output", output)
     cv2.waitKey(0)
