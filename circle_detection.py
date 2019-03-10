@@ -8,11 +8,14 @@ ap = argparse.ArgumentParser()
 #ap.add_argument("-i", "--image", required=True, help="Path to the image")
 #args = vars(ap.parse_args())
 # load the image, clone it for output, and then convert it to grayscale
-image = cv2.imread("images/img_test_2.jpg")
+filename = "images/color_correct.jpg"
+image = cv2.imread(filename, cv2.IMREAD_COLOR)
 output = image.copy()
+
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 gray = cv2.GaussianBlur(gray,(5,5),0);
 gray = cv2.medianBlur(gray,5)
+
 
 # Adaptive Guassian Threshold is to detect sharp edges in the Image. For more information Google it.
 gray = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,3.5)
@@ -23,6 +26,7 @@ circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.35, 100,
                                minRadius=30,
                                maxRadius=150
                                )
+
 while circles.shape[1] != 3:
     circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1.35, 100,
                                param1=100,
@@ -32,9 +36,8 @@ while circles.shape[1] != 3:
                                )
     param2_num+=1
     print(circles.shape)
-
-
 # ensure at least some circles were found
+avg = 0
 if circles is not None:
     # convert the (x, y) coordinates and radius of the circles to integers
     circles = np.round(circles[0, :]).astype("int")
@@ -44,8 +47,8 @@ if circles is not None:
     for (x, y, r) in circles:
         # draw the circle in the output image, then draw a rectangle
         # corresponding to the center of the circle
-
-
+        print (x,y)
+        print(output[x,y])
 
         cv2.circle(output, (x, y), r, (0, 255, 0), 4)
         cv2.rectangle(output, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
