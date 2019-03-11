@@ -9,7 +9,7 @@ ap = argparse.ArgumentParser()
 #ap.add_argument("-i", "--image", required=True, help="Path to the image")
 #args = vars(ap.parse_args())
 # load the image, clone it for output, and then convert it to grayscale
-filename = "images/measured_img.jpg"
+filename = "images/color_correct_phone_2.jpg"
 image = cv2.imread(filename)
 image_data = np.asanyarray(image)
 output = image.copy()
@@ -86,5 +86,5 @@ if circles is not None:
     temp = True_MultiLateration.true_multilateration(0.15 ,0, 0.15)
     print (f'{temp[0]*100} {temp[1]*100} {temp[2]*100}')
     # show the output image
-    cv2.imshow("output", output)
+    cv2.imshow("OUTPUT", output)
     cv2.waitKey(0)
